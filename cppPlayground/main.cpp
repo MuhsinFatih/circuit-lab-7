@@ -21,32 +21,32 @@ int main(int argc, const char * argv[]) {
 	
 	
 	double freq[] = {
-		50,
-		97,
-		250,
-		482,
+		150,
+		318,
 		1000,
-		2000,
-		2400
+		1600,
+		5000,
+		7900,
+		10000
 	};
 	
 	double Vout[] {
-		0.936,
-		1.78,
-		4.12,
-		6.48,
-		8.16,
-		8.96,
-		8.96
+		4.4,
+		4.6,
+		4.6,
+		4.28,
+		3,
+		2.18,
+		1.8
 	};
 	double Vin[] {
-		9.44,
-		9.44,
-		9.28,
-		9.28,
-		9.28,
-		9.44,
-		9.44
+		9.52,
+		10.2,
+		10.4,
+		10.0,
+		10.0,
+		10.0,
+		10.0
 	};
 	double gains[7];
 	
@@ -70,31 +70,32 @@ int main(int argc, const char * argv[]) {
 	
 	
 	double dY1[] {
-		1,
-		0.2,
-		0.3,
-		0.3,
-		0.2,
+		0.05,
+		0,
 		0.1,
-		0.1
+		0.2,
+		0.3,
+		0.25,
+		0.2
 	};
 	
 	double dY2[] {
-		4,
-		2,
-		4,
-		4,
+		6.5,
+		3,
 		5,
-		5,
-		4
+		6,
+		4,
+		2.5,
+		2
 	};
 	
 	cout << "\n\n\n";
 	cout << " ==== PHASES ====\n";
 	
 	for(int i=0; i<sizeof(freq) / sizeof(double); ++i) {
-		printf("%.0f input frequency:\nPhase\\;=\\frac{%.1f}{%.0f}\\times360=%.1f\n\n",freq[i],dY1[i],dY2[i], dY1[i]/dY2[i] * 360);
+		printf("%.0f input frequency:\nPhase\\;=\\frac{%.1f}{%.1f}\\times360=%.1f\n\n",freq[i],dY1[i] * 2,dY2[i], (dY1[i] * 2) / dY2[i] * 360);
 	}
+	
 	
 	cout << endl;
 	return 0;
