@@ -14,14 +14,15 @@ using namespace std;
 while(w<length)
 #define vi  vector<int>
 #define vs  vector<string>
+#define vd  vector<double>
 #define st  size_t
 #define pi M_PI
 int main(int argc, const char * argv[]) {
 	
 	bool debug = false;
 	
-	cout << "\nEXPERIMENTAL RESULTS:\n\n";
-	vector<double> freq = {
+	
+	vd freq = {
 		50,
 		96,
 		318,
@@ -33,7 +34,7 @@ int main(int argc, const char * argv[]) {
 		10000
 	};
 	
-	double Vout[] {
+	vd Vout = {
 		4.52,
 		4.64,
 		4.60,
@@ -44,7 +45,7 @@ int main(int argc, const char * argv[]) {
 		2.16,
 		1.84
 	};
-	double Vin[] {
+	vd Vin = {
 		10,
 		10.2,
 		10.2,
@@ -55,7 +56,39 @@ int main(int argc, const char * argv[]) {
 		10.1,
 		10.2
 	};
+	
+	
+	vd dY1 = {
+		0,
+		0,
+		0.1,
+		0.1,
+		0.15,
+		0.3,
+		0.2,
+		0.55,
+		0.5
+	};
+	
+	vd dY2 = {
+		4,
+		5,
+		6,
+		4,
+		5.5,
+		6,
+		4,
+		6,
+		5
+	};
+
 	double gains[7];
+	
+	
+	
+	
+	cout << "\nEXPERIMENTAL RESULTS:\n\n";
+	
 	
 	
 	cout << " ======= GAINS =======\n";
@@ -76,29 +109,6 @@ int main(int argc, const char * argv[]) {
 	
 	
 	
-	double dY1[] {
-		0,
-		0,
-		0.1,
-		0.1,
-		0.15,
-		0.3,
-		0.2,
-		0.55,
-		0.5
-	};
-	
-	double dY2[] {
-		4,
-		5,
-		6,
-		4,
-		5.5,
-		6,
-		4,
-		6,
-		5
-	};
 	
 	cout << "\n\n\n";
 	cout << " ==== PHASES ====\n";
@@ -135,14 +145,65 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	freq = {
-		150,
+		50,
+		96,
 		318,
-		1000,
+		482,
+		876,
 		1600,
-		5000,
-		7900,
+		2400,
+		8000,
 		10000
 	};
+	
+	Vout = {
+		4.52,
+		4.64,
+		4.60,
+		4.60,
+		4.60,
+		4.24,
+		3.96,
+		2.16,
+		1.84
+	};
+	Vin = {
+		10,
+		10.2,
+		10.2,
+		10.1,
+		10.2,
+		10.1,
+		10,
+		10.1,
+		10.2
+	};
+	
+	
+	dY1 = {
+		0,
+		0,
+		0.1,
+		0.1,
+		0.15,
+		0.3,
+		0.2,
+		0.55,
+		0.5
+	};
+	
+	dY2 = {
+		4,
+		5,
+		6,
+		4,
+		5.5,
+		6,
+		4,
+		6,
+		5
+	};
+
 	
 	
 	
