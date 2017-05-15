@@ -427,7 +427,22 @@ int main(int argc, const char * argv[]) {
 	cout << "========= COMPARISON TABLES =========\n\n";
 	
 	for(int e=0; e<exp.size(); ++e){
-		printf("experiment %i:\n\n", e + 1);
+		char* label = "";
+		switch (e) {
+			case 0:
+				label = "1";
+				break;
+			case 1:
+				label = "2a";
+				break;
+			case 2:
+				label = "2b";
+				break;
+			case 3:
+				label = "3";
+				break;
+		}
+		printf("experiment %s\n\n", label);
 		printf("Theoretical:\n\n");
 		printf("%-20s%-20s%-20s%-20s%-20s%-20s\n","Frequency","Vin", "Vout", "Phase(Vout)", "Gain", "Gain(db)");
 		for(int i=0; i<exp[e].freq.size(); ++i){
