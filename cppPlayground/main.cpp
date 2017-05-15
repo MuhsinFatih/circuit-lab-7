@@ -340,12 +340,11 @@ int main(int argc, const char * argv[]) {
 	cout << "experiment 3\n\n";
 	
 	for(int i=0;i<exp3.freq.size(); ++i) {
-		double w = 2 * pi * exp2b.freq[i];
-		double A = 0.001 / 100;
-		double B = -pow(w, 2) + 0.001 * 10 * pow(10, -6);
-		
-		double re = pow(w, 2) * pow(A, 2) / (pow(w, 2) * pow(A, 2) + pow(B, 2));
-		double im = w * A * B / (pow(w, 2) * pow(A, 2) + pow(B, 2));
+		double w = 2 * pi * exp3.freq[i];
+		double A = -pow(w, 2) + pow(10, 8);
+		double RC = 0.001;
+		double re = pow(w / RC, 2) / (pow(w / RC, 2)+ pow(A, 2));
+		double im = w * A / RC / (pow(w / RC, 2) + pow(A, 2));
 		double mag = sqrt(pow(re, 2) + pow(im, 2));
 		double phase = atan(im/re) * 180 / pi;
 		if(debug) {
@@ -361,7 +360,8 @@ int main(int argc, const char * argv[]) {
 	}
 
 
-	
+	cout << endl;
+	return 0;
 	cout << "\nEXPERIMENTAL RESULTS:\n\n";
 	
 	
