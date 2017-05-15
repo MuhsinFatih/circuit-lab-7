@@ -21,13 +21,21 @@ while(w<length)
 
 class resultSet {
 public:
+	// controlled
 	vd freq;
 	
+	// observed
 	vd Vout;
 	vd Vin;
 	
 	vd dY1;
 	vd dY2;
+	
+	// calculated
+	vd phase;
+	vd gain;
+	vd phaseExp;
+	vd gainExp;
 };
 int main(int argc, const char * argv[]) {
 	
@@ -259,6 +267,13 @@ int main(int argc, const char * argv[]) {
 		exp3
 	};
 	
+	for(int i=0; i<exp.size(); ++i) {
+		exp[i].gain.resize(exp[i].freq.size());
+		exp[i].gainExp.resize(exp[i].freq.size());
+		exp[i].phase.resize(exp[i].freq.size());
+		exp[i].phaseExp.resize(exp[i].freq.size());
+	}
+	
 	cout << "\n\nTHEORETICAL RESULTS:\n\n";
 	
 	cout << "experiment 1\n\n";
@@ -270,6 +285,8 @@ int main(int argc, const char * argv[]) {
 		double im = (w/RC) / (pow(w, 2) + pow(1/RC,2));
 		double mag = sqrt(pow(re, 2) + pow(im, 2));
 		double phase = atan(im/re) * 180 / pi;
+		exp[0].gain[i] = mag;
+		exp[0].phase[i] = phase;
 		if(debug) {
 			printf("%.0fHz input frequency:\n",exp1.freq[i]);
 			printf("w=%f\tRC=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,RC,re,im,mag,phase);
@@ -298,6 +315,8 @@ int main(int argc, const char * argv[]) {
 		double im = - w * RL /(pow(w, 2) + pow(RL, 2));
 		double mag = sqrt(pow(re, 2) + pow(im, 2));
 		double phase = atan(im/re) * 180 / pi;
+		exp[1].gain[i] = mag;
+		exp[1].phase[i] = phase;
 		if(debug) {
 			printf("%.0fHz input frequency:\n",exp2a.freq[i]);
 			printf("w=%f\tR/L=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,RL,re,im,mag,phase);
@@ -325,6 +344,8 @@ int main(int argc, const char * argv[]) {
 		double im = w*R1/L*B/(pow(w, 2)*pow(A, 2)+pow(B, 2));
 		double mag = sqrt(pow(re, 2) + pow(im, 2));
 		double phase = atan(im/re) * 180 / pi;
+		exp[2].gain[i] = mag;
+		exp[2].phase[i] = phase;
 		if(debug) {
 			printf("%.0fHz input frequency:\n",exp2b.freq[i]);
 			printf("w=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,re,im,mag,phase);
@@ -347,6 +368,8 @@ int main(int argc, const char * argv[]) {
 		double im = w * A / RC / (pow(w / RC, 2) + pow(A, 2));
 		double mag = sqrt(pow(re, 2) + pow(im, 2));
 		double phase = atan(im/re) * 180 / pi;
+		exp[3].gain[i] = mag;
+		exp[3].phase[i] = phase;
 		if(debug) {
 			printf("%.0fHz input frequency:\n",exp3.freq[i]);
 			printf("w=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,re,im,mag,phase);
@@ -372,8 +395,10 @@ int main(int argc, const char * argv[]) {
 		vd Vin = exp[e].Vin;
 		vd dY1 = exp[e].dY1;
 		vd dY2 = exp[e].dY2;
+		
 		for(int i=0; i<freq.size(); ++i) {
 			gains[i] = Vout[i]/Vin[i];
+			exp[e].gainExp[i] = gains[i];
 			printf("%.0fHz input frequency:\nGain\\;=\\;\\frac{V_{out}}{V_{in}}=\\frac{%.3f}{%.3f}=%.3f\n",freq[i],Vout[i],Vin[i],gains[i]);
 		}
 		
@@ -381,7 +406,7 @@ int main(int argc, const char * argv[]) {
 		cout << " ==== GAINS in db ====\n";
 		
 		for(int i=0; i<freq.size(); ++i) {
-			printf("%.0fHz input frequency:\nGain(db)\\;=\\;20\\log(%.3f)=%.3f\n\n",freq[i], gains[i], 20 * log(gains[i]));
+			printf("%.0fHz input frequency:\nGain(db)\\;=\\;20\\log(%.3f)=%.3f\n\n",freq[i], gains[i], 20 * log10(gains[i]));
 		}
 		
 		
@@ -392,9 +417,30 @@ int main(int argc, const char * argv[]) {
 		cout << " ==== PHASES ====\n";
 		
 		for(int i=0; i<freq.size(); ++i) {
-			printf("%.0fHz input frequency:\nPhase\\;=\\frac{%.1f}{%.1f}\\times360=%.1f\n\n",freq[i],(dY1[i] >= 1.0 ? /* 5 per div this is easier*/ dY1[i] : dY1[i] * 2),dY2[i], (dY1[i] >= 1.0 ? dY1[i] : dY1[i] * 2) / dY2[i] * 360);
+			double phase = (dY1[i] >= 1.0 ? dY1[i] : dY1[i] * 2) / dY2[i] * 360;
+			exp[e].phaseExp[i] = phase;
+			printf("%.0fHz input frequency:\nPhase\\;=\\frac{%.1f}{%.1f}\\times360=%.1f\n\n",freq[i],(dY1[i] >= 1.0 ? /* 5 per div this is easier*/ dY1[i] : dY1[i] * 2),dY2[i], phase);
 		}
 	}
+	
+	
+	cout << "========= COMPARISON TABLES =========\n\n";
+	
+	for(int e=0; e<exp.size(); ++e){
+		printf("experiment %i:\n\n", e + 1);
+		printf("Theoretical:\n\n");
+		printf("%-20s%-20s%-20s%-20s%-20s%-20s\n","Frequency","Vin", "Vout", "Phase(Vout)", "Gain", "Gain(db)");
+		for(int i=0; i<exp[e].freq.size(); ++i){
+			printf("%-20.0f%-20.1f%-20.1f%-20.2f%-20.3f%-20.3f\n", exp[e].freq[i], 10.f,exp[e].gain[i] * 10, exp[e].phase[i], exp[e].gain[i], 20*log10(exp[e].gain[i]));
+		}
+		printf("\n\nExperimental:\n\n");
+		printf("%-20s%-20s%-20s%-20s%-20s\n","Frequency","Vin", "Vout", "Phase(Vout)", "Gain", "Gain(db)");
+		for(int i=0; i<exp[e].freq.size(); ++i){
+			printf("%-20.0f%-20.1f%-20.1f%-20.2f%-20.3f%-20.3f\n",exp[e].freq[i],exp[e].Vin[i], exp[e].Vout[i], exp[e].phaseExp[i], exp[e].gainExp[i], 20*log10(exp[e].gainExp[i]));
+		}
+		cout << "\n\n";
+	}
+	
 	
 	
 	cout << endl;
