@@ -360,13 +360,12 @@ int main(int argc, const char * argv[]) {
 	}
 
 
-	cout << endl;
-	return 0;
 	cout << "\nEXPERIMENTAL RESULTS:\n\n";
 	
 	
 	
 	for(int e=0; e<exp.size(); ++e) {
+		printf("experiment %i:\n\n",e);
 		cout << " ======= GAINS =======\n";
 		vd freq = exp[e].freq;
 		vd Vout = exp[e].Vout;
