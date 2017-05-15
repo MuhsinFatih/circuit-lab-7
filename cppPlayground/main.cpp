@@ -7,6 +7,7 @@
 #include <cmath>
 #include <fstream>
 #include <math.h>
+
 using namespace std;
 #include <map>
 #define REP(size) for(size_t i=0, length=size; i<length; ++i)
@@ -34,7 +35,9 @@ int main(int argc, const char * argv[]) {
 	
 	double gains[7];
 	resultSet exp1 = resultSet();
-	resultSet exp2 = resultSet();
+	resultSet exp2a = resultSet();
+	resultSet exp2b = resultSet();
+	resultSet exp3 = resultSet();
 	vector<resultSet> exp;
 	
 	
@@ -87,7 +90,57 @@ int main(int argc, const char * argv[]) {
 		4
 	};
 	
-	exp2.freq = {
+	exp2a.freq = {
+		150,
+		318,
+		1000,
+		1600,
+		5000,
+		7900,
+		10000
+	};
+	
+	exp2a.Vout = {
+		4.4,
+		4.6,
+		4.6,
+		4.28,
+		3,
+		2.18,
+		1.8
+	};
+	
+	exp2a.Vin = {
+		9.52,
+		10.2,
+		10.4,
+		10.0,
+		10.0,
+		10.0,
+		10.0
+	};
+	
+	exp2a.dY1 = {
+		0.05,
+		0,
+		0.1,
+		0.2,
+		0.3,
+		0.25,
+		0.2
+	};
+	
+	exp2a.dY2 = {
+		6.5,
+		3,
+		5,
+		6,
+		4,
+		2.5,
+		2
+	};
+	
+	exp2b.freq = {
 		50,
 		96,
 		318,
@@ -99,7 +152,7 @@ int main(int argc, const char * argv[]) {
 		10000
 	};
 	
-	exp2.Vout = {
+	exp2b.Vout = {
 		4.52,
 		4.64,
 		4.60,
@@ -110,7 +163,7 @@ int main(int argc, const char * argv[]) {
 		2.16,
 		1.84
 	};
-	exp2.Vin = {
+	exp2b.Vin = {
 		10,
 		10.2,
 		10.2,
@@ -123,7 +176,7 @@ int main(int argc, const char * argv[]) {
 	};
 	
 	
-	exp2.dY1 = {
+	exp2b.dY1 = {
 		0,
 		0,
 		0.1,
@@ -135,7 +188,7 @@ int main(int argc, const char * argv[]) {
 		0.5
 	};
 	
-	exp2.dY2 = {
+	exp2b.dY2 = {
 		4,
 		5,
 		6,
@@ -147,9 +200,63 @@ int main(int argc, const char * argv[]) {
 		5
 	};
 
+	
+	
+	exp3.freq = {
+		300,
+		335,
+		1510,
+		1600,
+		1670,
+		7500,
+		8300
+	};
+	
+	exp3.Vout = {
+		1.15,
+		1.11,
+		1.04,
+		1.01,
+		1.01,
+		0.392,
+		0.384
+	};
+	exp3.Vin = {
+		10.2,
+		10.1,
+		9.92,
+		9.92,
+		10.2,
+		9.84,
+		9.84
+	};
+	
+	exp3.dY1 = {
+		0.1,
+		0.1,
+		0.15,
+		0.15,
+		0.15,
+		0.15,
+		0.1
+	};
+	
+	exp3.dY2 = {
+		6.5,
+		6,
+		3,
+		3,
+		3,
+		2.5,
+		2.5
+	};
+	
+	
 	exp = {
 		exp1,
-		exp2
+		exp2a,
+		exp2b,
+		exp3
 	};
 	
 	cout << "\n\nTHEORETICAL RESULTS:\n\n";
@@ -171,7 +278,7 @@ int main(int argc, const char * argv[]) {
 			//			printf("H(jw)=%.3f\\;+\\:j%.3f\n",re,im);
 			//			printf("\\left|H(jw)\\right|=%.3f\n",mag);
 			//			printf("phase=\\;%.3f\n",phase);
-			printf("H(jw)\\;=\\frac{w^2}{w^2+({\\displaystyle\\frac1{RC}})^2}+\\;j\\times\\frac{w^2}{RC(w^2+({\\displaystyle\\frac1{RC}})^2)}=%.3f\\;+\\:j%.3f\n", re,im);
+			printf("H(jw)\\;=\\frac{w^2}{w^2+({\\displaystyle\\frac1{RC}})^2}+\\;j\\times\\frac{w^2}{RC(w^2+({\\displaystyle\\frac1{RC}})^2)}=%.3f\\;+\\:j(%.3f)\n", re,im);
 			printf("\\left|H(jw)\\right|\\;=\\;\\sqrt{Re(H)^2+Im(H)^2}=\\sqrt{%.3f^2+%.3f^2}=%.3f\n",re,im,mag);
 			printf("phase\\;=\\;\\tan^{-1}\\left(\\frac{Im(H)}{Re(H)}\\right)\\;=\\;\\tan^{-1}(\\frac {%.3f}{%.3f})\\;=\\;%.3f^\\circ\n",im,re,phase);
 		}
@@ -182,27 +289,78 @@ int main(int argc, const char * argv[]) {
 	
 	
 	
-	cout << "experiment 2\n\n";
+	cout << "experiment 2a\n\n";
 	
-	for(int i=0;i<exp2.freq.size(); ++i) {
-		double w = 2 * pi * exp2.freq[i];
+	for(int i=0;i<exp2a.freq.size(); ++i) {
+		double w = 2 * pi * exp2a.freq[i];
 		double RL = 10000;
 		double re = pow(RL, 2)/(pow(w, 2) + pow(RL, 2));
-		double im = w * RL /(pow(w, 2) + pow(RL, 2));
+		double im = - w * RL /(pow(w, 2) + pow(RL, 2));
 		double mag = sqrt(pow(re, 2) + pow(im, 2));
 		double phase = atan(im/re) * 180 / pi;
 		if(debug) {
-			printf("%.0fHz input frequency:\n",exp2.freq[i]);
+			printf("%.0fHz input frequency:\n",exp2a.freq[i]);
 			printf("w=%f\tR/L=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,RL,re,im,mag,phase);
 		} else {
-			printf("%.0fHz input frequency:\n",exp2.freq[i]);
-			printf("H(jw)\\;=\\;\\frac{({\\displaystyle\\frac RL})^2}{w^2\\;+\\;({\\displaystyle\\frac RL})^2}\\;+\\;j\\times\\frac{w\\times({\\displaystyle\\frac RL})}{w^2+({\\displaystyle\\frac RL})^2}\\;=\\;%.3f\\;+\\;j%.3f\n", re,im);
+			printf("%.0fHz input frequency:\n",exp2a.freq[i]);
+			printf("H(jw)\\;=\\;\\frac{({\\displaystyle\\frac RL})^2}{w^2\\;+\\;({\\displaystyle\\frac RL})^2}\\;+\\;j\\times\\frac{w\\times({\\displaystyle\\frac RL})}{w^2+({\\displaystyle\\frac RL})^2}\\;=\\;%.3f\\;+\\;j(%.3f)\n", re,im);
 			printf("\\left|H(jw)\\right|\\;=\\;\\sqrt{Re(H)^2+Im(H)^2}=\\sqrt{%.3f^2+%.3f^2}=%.3f\n",re,im,mag);
 			printf("phase\\;=\\;\\tan^{-1}\\left(\\frac{Im(H)}{Re(H)}\\right)\\;=\\;\\tan^{-1}(\\frac {%.3f}{%.3f})\\;=\\;%.3f^\\circ\n",im,re,phase);
 		}
 		cout << "\n\n";
 	}
 	
+	
+	cout << "experiment 2b\n\n";
+	
+	for(int i=0;i<exp2b.freq.size(); ++i) {
+		double R1 = 10, R2 = 33000;
+		double L = 0.001;
+		double C = 0.01 * pow(10, -6);
+		double w = 2 * pi * exp2b.freq[i];
+		double A = (C*R1*R2 + L)/(L*C*R2);
+		double B = (R1 - pow(w, 2)*C*R2*L)/(C*R2*L);
+		
+		double re = pow(w, 2)*(R1/L)*A/(pow(w, 2)*pow(A, 2)+pow(B, 2));
+		double im = w*R1/L*B/(pow(w, 2)*pow(A, 2)+pow(B, 2));
+		double mag = sqrt(pow(re, 2) + pow(im, 2));
+		double phase = atan(im/re) * 180 / pi;
+		if(debug) {
+			printf("%.0fHz input frequency:\n",exp2b.freq[i]);
+			printf("w=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,re,im,mag,phase);
+		} else {
+			printf("%.0fHz input frequency:\n",exp2b.freq[i]);
+			printf("H(jw)\\;=%.3f\\;+\\:j(%.3f)\n", re,im);
+			printf("\\left|H(jw)\\right|\\;=\\;\\sqrt{Re(H)^2+Im(H)^2}=\\sqrt{%.3f^2+%.3f^2}=%.3f\n",re,im,mag);
+			printf("phase\\;=\\;\\tan^{-1}\\left(\\frac{Im(H)}{Re(H)}\\right)\\;=\\;\\tan^{-1}(\\frac {%.3f}{%.3f})\\;=\\;%.3f^\\circ\n",im,re,phase);
+		}
+		cout << "\n\n";
+	}
+	
+	cout << "experiment 3\n\n";
+	
+	for(int i=0;i<exp3.freq.size(); ++i) {
+		double w = 2 * pi * exp2b.freq[i];
+		double A = 0.001 / 100;
+		double B = -pow(w, 2) + 0.001 * 10 * pow(10, -6);
+		
+		double re = pow(w, 2) * pow(A, 2) / (pow(w, 2) * pow(A, 2) + pow(B, 2));
+		double im = w * A * B / (pow(w, 2) * pow(A, 2) + pow(B, 2));
+		double mag = sqrt(pow(re, 2) + pow(im, 2));
+		double phase = atan(im/re) * 180 / pi;
+		if(debug) {
+			printf("%.0fHz input frequency:\n",exp3.freq[i]);
+			printf("w=%f\tre=%f\tim=%f\tmag=%f\tphase=%f\n\n",w,re,im,mag,phase);
+		} else {
+			printf("%.0fHz input frequency:\n",exp3.freq[i]);
+			printf("H(jw)\\;=%.3f\\;+\\:j(%.3f)\n", re,im);
+			printf("\\left|H(jw)\\right|\\;=\\;\\sqrt{Re(H)^2+Im(H)^2}=\\sqrt{%.3f^2+%.3f^2}=%.3f\n",re,im,mag);
+			printf("phase\\;=\\;\\tan^{-1}\\left(\\frac{Im(H)}{Re(H)}\\right)\\;=\\;\\tan^{-1}(\\frac {%.3f}{%.3f})\\;=\\;%.3f^\\circ\n",im,re,phase);
+		}
+		cout << "\n\n";
+	}
+
+
 	
 	cout << "\nEXPERIMENTAL RESULTS:\n\n";
 	
